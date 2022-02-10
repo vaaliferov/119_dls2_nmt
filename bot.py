@@ -1,3 +1,4 @@
+import re
 import torch
 import telegram
 import telegram.ext
@@ -45,6 +46,15 @@ def handle_text(update, context):
     if text[-1] == '#':
         text = text[:-1]
         attn_maps = True
+
+    p = f'[^ЁёА-Яа-я0-9 ,.!?-]'
+    text = re.sub(p, '', text)
+    text = text.strip(' ')
+
+    if len(text) < MIN_CHAR_NUM:
+        usage = 'Please, send me a text in Russian'
+        context.bot.send_message(chat_id, usage)
+        return None
 
     text = text[0].upper() + text[1:]
     if text[-1] not in '.!?': text += '.'
