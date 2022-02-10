@@ -47,7 +47,7 @@ def handle_text(update, context):
         text = text[:-1]
         attn_maps = True
 
-    p = f'[^ЁёА-Яа-я0-9 ,.!?-]'
+    p = '[^ЁёА-Яа-я0-9 ,.!?-]'
     text = re.sub(p, '', text)
     text = text.strip(' ')
 
