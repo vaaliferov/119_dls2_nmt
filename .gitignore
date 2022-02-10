@@ -1,0 +1,7 @@
+data
+telegram
+secret.sh
+secret.py
+__pycache__
+telegram-bot-api
+.ipynb_checkpoints

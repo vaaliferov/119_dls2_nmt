@@ -1,0 +1,10 @@
+tqdm
+gdown
+psutil
+numpy
+torch
+plotly
+torchtext
+matplotlib
+youtokentome
+python-telegram-bot

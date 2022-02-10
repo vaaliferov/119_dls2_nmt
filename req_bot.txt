@@ -1,0 +1,5 @@
+numpy
+torch
+matplotlib
+youtokentome
+python-telegram-bot

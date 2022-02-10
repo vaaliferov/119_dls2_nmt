@@ -1,0 +1,11 @@
+[Unit]
+Description=<name>_bot
+
+[Service]
+Type=simple
+User=<user>
+WorkingDirectory=/opt/<name>
+ExecStart=/opt/<name>/env/bin/python3 /opt/<name>/bot.py
+
+[Install]
+WantedBy=multi-user.target
