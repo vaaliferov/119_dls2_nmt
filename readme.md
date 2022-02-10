@@ -34,12 +34,12 @@
 
 ![Alt Text](pics/9.1.png)
 ![Alt Text](pics/9.2.png)
-![Alt Text](pics/9.3.png)
 
+![Alt Text](pics/9.3.png)
 ![Alt Text](pics/9.4.png)
+
 ![Alt Text](pics/9.5.png)
 ![Alt Text](pics/9.6.png)
 
 ![Alt Text](pics/4.1.gif)
-![Alt Text](pics/4.2.png)
 ![Alt Text](pics/4.3.png)
