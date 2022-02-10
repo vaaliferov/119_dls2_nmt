@@ -46,6 +46,9 @@ def handle_text(update, context):
         text = text[:-1]
         attn_maps = True
 
+    text = text[0].upper() + text[1:]
+    if text[-1] not in '.!?': text += '.'
+
     src = src_tok.encode(text, bos=True, eos=True)
     trg, enc_self_attn, dec_self_attn, dec_enc_attn = model.greedy_generate(src)
     result = trg_tok.decode(trg, ignore_ids=SPECIAL_IDS)
