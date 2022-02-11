@@ -1,11 +1,19 @@
+# PyTorch, CPU only, auto
+# https://github.com/pytorch/pytorch/issues/72045
+-f https://download.pytorch.org/whl/torch_stable.html
+torch==1.10.1+cpu
+torchtext==0.11.1+cpu
+torchaudio==0.10.1+cpu
+torchvision==0.11.2+cpu
+
 # PyTorch, CPU only, x86_64
-# https://download.pytorch.org/whl/cpu/torch-1.10.1%2Bcpu-cp39-cp39-linux_x86_64.whl
-# https://download.pytorch.org/whl/cpu/torchvision-0.11.2%2Bcpu-cp39-cp39-linux_x86_64.whl
-# https://download.pytorch.org/whl/cpu/torchaudio-0.10.1%2Bcpu-cp39-cp39-linux_x86_64.whl
-# https://download.pytorch.org/whl/torchtext-0.11.1-cp39-cp39-linux_x86_64.whl
+https://download.pytorch.org/whl/cpu/torch-1.10.1%2Bcpu-cp39-cp39-linux_x86_64.whl
+https://download.pytorch.org/whl/cpu/torchvision-0.11.2%2Bcpu-cp39-cp39-linux_x86_64.whl
+https://download.pytorch.org/whl/cpu/torchaudio-0.10.1%2Bcpu-cp39-cp39-linux_x86_64.whl
+https://download.pytorch.org/whl/torchtext-0.11.1-cp39-cp39-linux_x86_64.whl
 
 # PyTorch, CPU only, AArch64
-# https://download.pytorch.org/whl/cpu/torch-1.10.1-cp38-cp38-manylinux2014_aarch64.whl
-# https://download.pytorch.org/whl/cpu/torchvision-0.11.2-cp38-cp38-manylinux2014_aarch64.whl
-# https://download.pytorch.org/whl/cpu/torchaudio-0.10.1-cp38-cp38-manylinux2014_aarch64.whl
-# https://download.pytorch.org/whl/cpu/torchtext-0.11.1-cp38-cp38-manylinux2014_aarch64.whl
+https://download.pytorch.org/whl/cpu/torch-1.10.1-cp38-cp38-manylinux2014_aarch64.whl
+https://download.pytorch.org/whl/cpu/torchvision-0.11.2-cp38-cp38-manylinux2014_aarch64.whl
+https://download.pytorch.org/whl/cpu/torchaudio-0.10.1-cp38-cp38-manylinux2014_aarch64.whl
+https://download.pytorch.org/whl/cpu/torchtext-0.11.1-cp38-cp38-manylinux2014_aarch64.whl
