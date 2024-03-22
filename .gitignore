@@ -1,7 +1,5 @@
-data
-telegram
-secret.sh
-secret.py
+env
+*.pt
+*.yttm
 __pycache__
-telegram-bot-api
 .ipynb_checkpoints

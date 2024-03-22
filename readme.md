@@ -1,45 +1,61 @@
-### DLS2_NMT [:link:](https://en.dlschool.org) [:link:](https://stepik.org/course/102090/syllabus)
+# Neural Machine Translation
 
-##### Data
-* https://opus.nlpl.eu/OpenSubtitles-v2018.php
+* Transformer model for Neural Machine Translation from Russian to English
+* PyTorch implementation of "Attention Is All You Need" by Ashish Vaswani et al. ([link](https://arxiv.org/abs/1706.03762))
+* Implementation of the method for pruning of attention heads by Elena Voita et al. ([link](https://arxiv.org/abs/1905.09418))
 
-##### Training
-* https://www.kaggle.com
-* https://colab.research.google.com
+## Data for training
+* Dataset: OpenSubtitles v2018 ([link](https://opus.nlpl.eu/OpenSubtitles/ru&en/v2018/OpenSubtitles))
+* Total number of sentence pairs in corpus: ~26M
+* Number of sentence pairs in training: ~9M / ~250K / ~250K
 
-##### Model
-* https://github.com/bentrevett/pytorch-seq2seq
-* http://jalammar.github.io/illustrated-transformer
-* https://github.com/harvardnlp/annotated-transformer
+## Architecture
+* 6 layers, 8 heads, ~26M parameters
+* max len = 100, hid dim = 256, pf dim = 512
 
-##### Pruning
-* https://github.com/lena-voita/the-story-of-heads
-* https://lena-voita.github.io/posts/acl19_heads.html
+## Tokenization
+* Fast Byte Pair Encoding ([youtokentome](https://github.com/VKCOM/YouTokenToMe))
+* Source / target vocabulary size: 30k / 20k tokens
 
-##### Dependencies
-* https://github.com/tqdm/tqdm
-* https://github.com/numpy/numpy
-* https://github.com/pytorch/text
-* https://github.com/wkentaro/gdown
-* https://github.com/pytorch/pytorch
-* https://github.com/plotly/plotly.py
-* https://github.com/VKCOM/YouTokenToMe
-* https://github.com/matplotlib/matplotlib
-* https://github.com/tdlib/telegram-bot-api
-* https://github.com/python-telegram-bot/python-telegram-bot
+## Training
+* Dropout 0.1, gradient clipping 1
+* Loss function: Cross Entropy Loss, Target Metric: BLEU
+* 10 epochs, ~25 hours on Kaggle and Google Colab GPUs
+* Loader: 128 sentence pairs / batch, 100 batches / chunk
+* Optimizer: Adam, lr 0.0005, cosine schedule, warm up 70K steps
 
-##### Demo: Telegram Bot
-* https://www.oracle.com/cloud
-* https://t.me/vaaliferov_nmt_bot
+## Pruning
+* λ = 0.05, β = 0.50, 70k iterations
+* Gumbel noise, Hard Concrete Gates
+* Extra penalty for too many attention heads
 
-![Alt Text](pics/9.1.png)
-![Alt Text](pics/9.2.png)
+## Inference
+* Greedy and Beam Search generation (k=4)
 
-![Alt Text](pics/9.3.png)
-![Alt Text](pics/9.4.png)
+You can download and run it yourself or you can use this [bot](https://t.me/vaaliferov_nmt_bot).
 
-![Alt Text](pics/9.5.png)
-![Alt Text](pics/9.6.png)
+```bash
+python3 -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+gdown 1heNu80X8DcTKTx2Od0-EW-6JrkXxk5Ze
+gdown 1c4LakbKi7-gbKyAvcoGkJ8Yic16wvJx0
+gdown 1I46t9Qgz0NbXjT-EPbogEUYpvGPTc408
+python3 bot.py <bot_owner_id> <bot_token>
+```
+<p align=center><img src="pics/10.2.svg" width="820"></p>
+<p align=center><img src="pics/10.1.svg" width="820"></p>
+<p align=center><img src="pics/9.1_3.png" width="820"></p>
+<p align=center><img src="pics/9.4_6.png" width="820"></p>
+<p align=center><img src="pics/2.1_2.png" width="820"></p>
+<p align=center><img src="pics/3.2_3.png" width="820"></p>
+<p align=center><img src="pics/6.2_3.png" width="820"></p>
+<p align=center><img src="pics/4.1_3.png" width="820"></p>
+<p align=center><img src="pics/7.1_4.png" width="820"></p>
+<p align=center><img src="pics/8.1_2.png" width="820"></p>
 
-![Alt Text](pics/4.1.gif)
-![Alt Text](pics/4.3.png)
+<p align=center>
+    <img src="pics/5.1.png" width="270">
+    <img src="pics/5.2.png" width="270">
+    <img src="pics/5.3.png" width="270">
+</p>

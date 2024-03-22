@@ -1,0 +1,7 @@
+-f https://download.pytorch.org/whl/torch_stable.html
+
+gdown==5.1.0
+numpy==1.26.4
+torch==2.2.1+cpu
+youtokentome==1.0.6
+python-telegram-bot==20.8

@@ -48,3 +48,28 @@
 * https://github.com/lena-voita/the-story-of-heads/blob/master/lib/layers/concrete_gate.py
 * https://github.com/lena-voita/the-story-of-heads/blob/master/scripts/train_fixed_alive_heads.sh
 * https://github.com/lena-voita/the-story-of-heads/blob/efaa0dd520400baa760654b5b85396c203d3cbb7/lib/layers/attn.py#L272
+
+--------------
+
+* https://opus.nlpl.eu/OpenSubtitles/ru&en/v2018/OpenSubtitles
+
+* https://www.kaggle.com
+* https://colab.research.google.com
+
+* https://github.com/bentrevett/pytorch-seq2seq
+* http://jalammar.github.io/illustrated-transformer
+* https://github.com/harvardnlp/annotated-transformer
+
+* https://github.com/lena-voita/the-story-of-heads
+* https://lena-voita.github.io/posts/acl19_heads.html
+
+* https://github.com/tqdm/tqdm
+* https://github.com/numpy/numpy
+* https://github.com/pytorch/text
+* https://github.com/wkentaro/gdown
+* https://github.com/pytorch/pytorch
+* https://github.com/plotly/plotly.py
+* https://github.com/VKCOM/YouTokenToMe
+* https://github.com/matplotlib/matplotlib
+* https://github.com/tdlib/telegram-bot-api
+* https://github.com/python-telegram-bot/python-telegram-bot

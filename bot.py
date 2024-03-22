@@ -1,90 +1,91 @@
-import re
-import torch
-import telegram
-import telegram.ext
+import asyncio, torch
+import re, os, argparse
 import youtokentome as yttm
+from transformer import Model
 
-from plot import *
-from config import *
-from secret import *
-from model import Model
+from telegram import Update
+from telegram.ext import filters, Application
+from telegram.ext import MessageHandler, CommandHandler
 
-src_tok = yttm.BPE(SRC_TOKENIZER_PATH)
-trg_tok = yttm.BPE(TRG_TOKENIZER_PATH)
-src_vocab_size = len(src_tok.vocab())
-trg_vocab_size = len(trg_tok.vocab())
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-model = Model(src_vocab_size, trg_vocab_size, device)
-state = torch.load(MODEL_PATH, map_location=device)
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('id', type=int, help='bot owner id')
+    parser.add_argument('token', type=str, help='bot token')
+    return parser.parse_args()
+
+args = parse_args()
+src_tok = yttm.BPE('ru_bpe.yttm')
+trg_tok = yttm.BPE('en_bpe.yttm')
+state = torch.load('model.pt', map_location='cpu')
+
+
+params = {
+    
+    'bos_idx': 2,
+    'eos_idx': 3,
+    'pad_idx': 0,
+    
+    'n_heads': 8,
+    'n_layers': 6,
+    'dropout': 0.1,
+    'max_len': 100,
+    'device': 'cpu',
+
+    'pf_dim': 512,
+    'hid_dim': 256,
+    
+    'inp_dim': len(src_tok.vocab()),
+    'out_dim': len(trg_tok.vocab())
+}
+
+model = Model(**params)
 model.load_state_dict(state, strict=True)
 
-def send_document(context, chat_id, file_path):
-    with open(file_path, 'rb') as fd: 
-        context.bot.send_document(chat_id, fd)
 
-def handle_text(update, context):
-    text = update.message.text
+def preprocess(text):
+
+    pat = '[^ЁёА-Яа-я0-9 ,.!?-]'
+    text = re.sub(pat, '', text).strip()
+
+    if len(text):
+        text = text[0].upper() + text[1:]
+        if text[-1] not in '.!?': text + '.'
+
+    return text
+
+
+def translate(text):
+    src = src_tok.encode(text, bos=True, eos=True)
+    trg, _, _, _ = model.greedy_generate(src)
+    return trg_tok.decode(trg, ignore_ids={0,1,2,3})[0]
+
+
+async def handle_start(update, context):
+    usage = 'Please, type something in Russian'
+    await update.message.reply_text(usage)
+
+
+async def handle_text(update, context):
+
     user = update.message.from_user
     chat_id = update.message.chat_id
-    attn_maps, beam_search = False, False
-    
-    if user['id'] != TG_BOT_OWNER_ID:
+    text = preprocess(update.message.text)
+
+    if user['id'] != args.id:
         msg = f"@{user['username']} {user['id']}"
-        context.bot.send_message(TG_BOT_OWNER_ID, msg)
-        context.bot.send_message(TG_BOT_OWNER_ID, text)
-    
-    if text == '/start':
-        usage = 'Please, send me a text in Russian'
-        context.bot.send_message(chat_id, usage)
-        return None
+        await context.bot.send_message(args.id, msg)
+        await context.bot.send_message(args.id, text)
 
-    if text[-1] == '*':
-        text = text[:-1]
-        beam_search = True
+    if len(text) > 2:
+        loop = asyncio.get_running_loop()
+        result = await loop.run_in_executor(None, translate, text)
+        await update.message.reply_text(result)
 
-    if text[-1] == '#':
-        text = text[:-1]
-        attn_maps = True
+    else: await update.message.reply_text('text is too short')
 
-    p = '[^ЁёА-Яа-я0-9 ,.!?-]'
-    text = re.sub(p, '', text)
-    text = text.strip(' ')
 
-    if len(text) < MIN_CHAR_NUM:
-        usage = 'Please, send me a text in Russian'
-        context.bot.send_message(chat_id, usage)
-        return None
-
-    text = text[0].upper() + text[1:]
-    if text[-1] not in '.!?': text += '.'
-
-    src = src_tok.encode(text, bos=True, eos=True)
-    trg, enc_self_attn, dec_self_attn, dec_enc_attn = model.greedy_generate(src)
-    result = trg_tok.decode(trg, ignore_ids=SPECIAL_IDS)
-    context.bot.send_message(chat_id, result[0])
-
-    if beam_search and len(src) < 20:
-        beam_trg, _, _, _ = model.beam_generate(src)
-        beam_result = trg_tok.decode(beam_trg, ignore_ids=SPECIAL_IDS)
-        beam_result = [f'{i+1}. {r}' for i, r in enumerate(beam_result)]
-        context.bot.send_message(chat_id, '\n'.join(beam_result))
-    
-    if attn_maps and len(src) < 20 and len(trg) < 20:
-        context.bot.send_message(chat_id, 'please wait.. (~15s)')
-        src_labels = [src_tok.id_to_subword(t) for t in src]
-        trg_labels = [trg_tok.id_to_subword(t) for t in trg]
-        
-        plot_attn(enc_self_attn, src_labels, src_labels, ENC_SELF_ATTN_PLOT_PATH)
-        plot_attn(dec_enc_attn, src_labels, trg_labels[1:], DEC_ENC_ATTN_PLOT_PATH)
-        plot_attn(dec_self_attn, trg_labels[1:], trg_labels[1:], DEC_SELF_ATTN_PLOT_PATH)
-        
-        send_document(context, chat_id, ENC_SELF_ATTN_PLOT_PATH)
-        send_document(context, chat_id, DEC_SELF_ATTN_PLOT_PATH)
-        send_document(context, chat_id, DEC_ENC_ATTN_PLOT_PATH)
-
-f = telegram.ext.Filters.text
-h = telegram.ext.MessageHandler
-u = telegram.ext.Updater(TG_NMT_BOT_TOKEN)
-u.dispatcher.add_handler(h(f,handle_text))
-u.start_polling(); u.idle()
+app = Application.builder().token(args.token).build()
+app.add_handler(CommandHandler('start', handle_start))
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
+app.run_polling(allowed_updates=Update.ALL_TYPES)
