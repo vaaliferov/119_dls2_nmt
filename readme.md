@@ -43,7 +43,7 @@ gdown 1c4LakbKi7-gbKyAvcoGkJ8Yic16wvJx0
 gdown 1I46t9Qgz0NbXjT-EPbogEUYpvGPTc408
 python3 bot.py <bot_owner_id> <bot_token>
 ```
-<p align=center><img src="pics/10.2.svg" width="820"></p>
+<p align=center><img src="pics/10.3.svg" width="820"></p>
 <p align=center><img src="pics/10.1.svg" width="820"></p>
 <p align=center><img src="pics/9.1_3.png" width="820"></p>
 <p align=center><img src="pics/9.4_6.png" width="820"></p>
